@@ -164,8 +164,7 @@ public class MainActivity extends BaseActivity {
                         tagView.init(feedImageTag);
                         tagView.draw(holder.pictureLayout,
                                 (int) (feedImageTag.getX() * ((double) holder.pictureLayout.getWidth() / (double) 1242)),
-                                (int) (feedImageTag.getY() * ((double) holder.pictureLayout.getWidth() / (double) 1242)),
-                                feedImageTag.isLeft());
+                                (int) (feedImageTag.getY() * ((double) holder.pictureLayout.getWidth() / (double) 1242)));
                         tagView.wave();
                     }
                 }

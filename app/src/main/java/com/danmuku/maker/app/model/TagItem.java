@@ -12,16 +12,7 @@ public class TagItem implements Serializable {
     private double y = -1;
 
     private int recordCount;
-    private boolean left = true;
 
-
-    public boolean isLeft() {
-        return left;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
 
     public int getRecordCount() {
         return recordCount;

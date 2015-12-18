@@ -23,8 +23,7 @@ public class LabelView extends LinearLayout {
     private TagItem tagInfo = new TagItem();
     private float parentWidth = 0;
     private float parentHeight = 0;
-    private TextView labelTxtLeft;
-    private TextView labelTxtRight;
+    private TextView labelTxt;
 
     public TagItem getTagInfo() {
         return tagInfo;
@@ -33,23 +32,20 @@ public class LabelView extends LinearLayout {
     public LabelView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelTxtLeft = (TextView) findViewById(R.id.label_text_left);
-        labelTxtRight = (TextView) findViewById(R.id.label_text_right);
+        labelTxt = (TextView) findViewById(R.id.label_text);
     }
 
     public LabelView(Context context, AttributeSet attr) {
         super(context, attr);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelTxtLeft = (TextView) findViewById(R.id.label_text_left);
-        labelTxtRight = (TextView) findViewById(R.id.label_text_right);
+        labelTxt = (TextView) findViewById(R.id.label_text);
     }
 
     public void init(TagItem tagItem) {
         tagInfo.setName(tagItem.getName());
         tagInfo.setId(tagItem.getId());
         tagInfo.setType(tagItem.getType());
-        labelTxtLeft.setText(tagItem.getName());
-        labelTxtRight.setText(tagItem.getName());
+        labelTxt.setText(tagItem.getName());
     }
 
     /**
@@ -59,24 +55,17 @@ public class LabelView extends LinearLayout {
      * @param left
      * @param top
      */
-    public void draw(ViewGroup parent, final int left, final int top, boolean isLeft) {
+    public void draw(ViewGroup parent, final int left, final int top) {
         this.parentWidth = parent.getWidth();
         if (parentWidth <= 0) {
             parentWidth = App.getApp().getScreenWidth();
         }
         setImageWidth((int) parentWidth);
         this.parentHeight = parentWidth;
-        if (isLeft) {
-            labelTxtRight.setVisibility(View.VISIBLE);
-            labelTxtLeft.setVisibility(View.GONE);
-            setupLocation(left, top);
-            parent.addView(this);
-        } else {
-            labelTxtRight.setVisibility(View.GONE);
-            labelTxtLeft.setVisibility(View.VISIBLE);
-            setupLocation(left, top);
-            parent.addView(this);
-        }
+
+        labelTxt.setVisibility(View.VISIBLE);
+        setupLocation(left, top);
+        parent.addView(this);
 
     }
 
@@ -88,9 +77,7 @@ public class LabelView extends LinearLayout {
      * @param top
      */
     public void addTo(ViewGroup parent, final int left, final int top) {
-        if (left > parent.getWidth() / 2) {
-            tagInfo.setLeft(false);
-        }
+
         this.parentWidth = parent.getWidth();
         if (parentWidth <= 0) {
             parentWidth = App.getApp().getScreenWidth();
@@ -98,18 +85,11 @@ public class LabelView extends LinearLayout {
         setImageWidth((int) parentWidth);
         this.parentHeight = parentWidth;
         if (emptyItem) {
-            labelTxtRight.setVisibility(View.GONE);
-            labelTxtLeft.setVisibility(View.GONE);
-            setupLocation(left, top);
-            parent.addView(this);
-        } else if (tagInfo.isLeft()) {
-            labelTxtRight.setVisibility(View.VISIBLE);
-            labelTxtLeft.setVisibility(View.GONE);
+            labelTxt.setVisibility(View.GONE);
             setupLocation(left, top);
             parent.addView(this);
         } else {
-            labelTxtRight.setVisibility(View.GONE);
-            labelTxtLeft.setVisibility(View.INVISIBLE);
+            labelTxt.setVisibility(View.INVISIBLE);
             setupLocation(20, 20);
             parent.addView(this);
 
@@ -118,7 +98,7 @@ public class LabelView extends LinearLayout {
                 public void run() {
                     int toLeft = left - getWidth();
                     setupLocation(toLeft, top);
-                    labelTxtLeft.setVisibility(View.VISIBLE);
+                    labelTxt.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -172,8 +152,7 @@ public class LabelView extends LinearLayout {
 
     public void setEmpty() {
         emptyItem = true;
-        labelTxtLeft.setVisibility(View.GONE);
-        labelTxtRight.setVisibility(View.GONE);
+        labelTxt.setVisibility(View.GONE);
     }
 
     public void wave() {
