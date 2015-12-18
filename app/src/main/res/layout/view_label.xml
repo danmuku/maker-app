@@ -15,8 +15,8 @@
         android:paddingRight="12dp"
         android:paddingTop="2dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="13sp"
+        android:textColor="@color/red"
+        android:textSize="26sp"
         android:visibility="invisible" />
 
 </LinearLayout>

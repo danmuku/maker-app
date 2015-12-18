@@ -39,7 +39,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import de.greenrobot.event.EventBus;
-import it.sephiroth.android.library.widget.HListView;
 
 /**
  * 图片处理界面
@@ -54,9 +53,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     @InjectView(R.id.drawing_view_container)
     ViewGroup drawArea;
 
-    //工具区
-    @InjectView(R.id.list_tools)
-    HListView bottomToolBar;
 
     @InjectView(R.id.toolbar_area)
     ViewGroup toolArea;
@@ -130,7 +126,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
     private void initEvent() {
 
-        bottomToolBar.setVisibility(View.GONE);
         commonLabelArea.setVisibility(View.VISIBLE);
 
 
@@ -258,20 +253,17 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     //添加标签
     private void addLabel(TagItem tagItem) {
         emptyLabelView.setVisibility(View.INVISIBLE);
-        if (labels.size() >= 5) {
-            alert("温馨提示", "您只能添加5个标签！", "确定", null, null, null, true);
-        } else {
-            int left = emptyLabelView.getLeft();
-            int top = emptyLabelView.getTop();
-            if (labels.size() == 0 && left == 0 && top == 0) {
-                left = mImageView.getWidth() / 2 - 10;
-                top = mImageView.getWidth() / 2;
-            }
-            LabelView label = new LabelView(PhotoProcessActivity.this);
-            label.init(tagItem);
-            EffectUtil.addLabelEditable(mImageView, drawArea, label, left, top);
-            labels.add(label);
+
+        int left = emptyLabelView.getLeft();
+        int top = emptyLabelView.getTop();
+        if (labels.size() == 0 && left == 0 && top == 0) {
+            left = mImageView.getWidth() / 2 - 10;
+            top = mImageView.getWidth() / 2;
         }
+        LabelView label = new LabelView(PhotoProcessActivity.this);
+        label.init(tagItem);
+        EffectUtil.addLabelEditable(mImageView, drawArea, label, left, top);
+        labels.add(label);
     }
 
     @Override
