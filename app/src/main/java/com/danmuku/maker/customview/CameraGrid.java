@@ -9,7 +9,6 @@ import android.view.View;
 
 /**
  * 照相机井字线
- * Created by sky on 2015/7/7.
  */
 public class CameraGrid extends View {
 
@@ -17,7 +16,7 @@ public class CameraGrid extends View {
     private Paint mPaint;
 
     public CameraGrid(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public CameraGrid(Context context, AttributeSet attrs) {
@@ -25,7 +24,7 @@ public class CameraGrid extends View {
         init();
     }
 
-    private void init(){
+    private void init() {
         mPaint = new Paint();
         mPaint.setColor(Color.WHITE);
         mPaint.setAlpha(120);

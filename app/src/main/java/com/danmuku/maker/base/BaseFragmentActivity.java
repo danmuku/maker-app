@@ -5,9 +5,7 @@ import android.view.View;
 
 import com.danmuku.maker.customview.CommonTitleBar;
 
-/**
- * Created by sky on 15/7/6.
- */
+
 public class BaseFragmentActivity extends FragmentActivity {
 
     protected CommonTitleBar titleBar;

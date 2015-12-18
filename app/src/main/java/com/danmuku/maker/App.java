@@ -13,15 +13,13 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
-/**
- * Created by sky on 2015/7/6.
- */
+
 public class App extends Application {
 
-    protected static App       mInstance;
-    private DisplayMetrics     displayMetrics = null;
+    protected static App mInstance;
+    private DisplayMetrics displayMetrics = null;
 
-    public App(){
+    public App() {
         mInstance = this;
     }
 
@@ -89,9 +87,8 @@ public class App extends Application {
         this.displayMetrics = DisplayMetrics;
     }
 
-    public int dp2px(float f)
-    {
-        return (int)(0.5F + f * getScreenDensity());
+    public int dp2px(float f) {
+        return (int) (0.5F + f * getScreenDensity());
     }
 
     public int px2dp(float pxValue) {
@@ -107,7 +104,6 @@ public class App extends Application {
     public String getCacheDirPath() {
         return getCacheDir().getAbsolutePath();
     }
-
 
 
 }

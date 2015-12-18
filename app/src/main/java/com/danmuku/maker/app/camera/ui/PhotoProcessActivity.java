@@ -130,7 +130,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
     private void initEvent() {
 
-
         bottomToolBar.setVisibility(View.GONE);
         commonLabelArea.setVisibility(View.VISIBLE);
 
@@ -150,6 +149,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
         titleBar.setRightBtnOnclickListener(v -> {
             savePicture();
         });
+
     }
 
     //保存图片
@@ -237,7 +237,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         @Override
         public void onClick(MyHighlightView view) {
-//            labelSelector.hide();
         }
 
         @Override

@@ -13,14 +13,12 @@ import com.danmuku.maker.R;
 import com.danmuku.maker.customview.CommonTitleBar;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-/**
- * Created by sky on 15/7/6.
- */
+
 public class BaseActivity extends AppCompatActivity implements ActivityResponsable {
 
     protected CommonTitleBar titleBar;
     //Activity辅助类
-    private ActivityHelper           mActivityHelper;
+    private ActivityHelper mActivityHelper;
 
 
     @Override
@@ -68,18 +66,12 @@ public class BaseActivity extends AppCompatActivity implements ActivityResponsab
     /**
      * 弹对话框
      *
-     * @param title
-     *            标题
-     * @param msg
-     *            消息
-     * @param positive
-     *            确定
-     * @param positiveListener
-     *            确定回调
-     * @param negative
-     *            否定
-     * @param negativeListener
-     *            否定回调
+     * @param title            标题
+     * @param msg              消息
+     * @param positive         确定
+     * @param positiveListener 确定回调
+     * @param negative         否定
+     * @param negativeListener 否定回调
      */
     @Override
     public void alert(String title, String msg, String positive,
@@ -91,20 +83,13 @@ public class BaseActivity extends AppCompatActivity implements ActivityResponsab
     /**
      * 弹对话框
      *
-     * @param title
-     *            标题
-     * @param msg
-     *            消息
-     * @param positive
-     *            确定
-     * @param positiveListener
-     *            确定回调
-     * @param negative
-     *            否定
-     * @param negativeListener
-     *            否定回调
-     * @param isCanceledOnTouchOutside
-     *            外部点是否可以取消对话框
+     * @param title                    标题
+     * @param msg                      消息
+     * @param positive                 确定
+     * @param positiveListener         确定回调
+     * @param negative                 否定
+     * @param negativeListener         否定回调
+     * @param isCanceledOnTouchOutside 外部点是否可以取消对话框
      */
     @Override
     public void alert(String title, String msg, String positive,
@@ -118,10 +103,8 @@ public class BaseActivity extends AppCompatActivity implements ActivityResponsab
     /**
      * TOAST
      *
-     * @param msg
-     *            消息
-     * @param period
-     *            时长
+     * @param msg    消息
+     * @param period 时长
      */
     @Override
     public void toast(String msg, int period) {
@@ -131,8 +114,7 @@ public class BaseActivity extends AppCompatActivity implements ActivityResponsab
     /**
      * 显示进度对话框
      *
-     * @param msg
-     *            消息
+     * @param msg 消息
      */
     @Override
     public void showProgressDialog(String msg) {
@@ -142,8 +124,7 @@ public class BaseActivity extends AppCompatActivity implements ActivityResponsab
     /**
      * 显示可取消的进度对话框
      *
-     * @param msg
-     *            消息
+     * @param msg 消息
      */
     public void showProgressDialog(final String msg, final boolean cancelable,
                                    final DialogInterface.OnCancelListener cancelListener) {

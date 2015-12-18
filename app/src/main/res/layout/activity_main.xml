@@ -6,7 +6,7 @@
     <com.danmuku.maker.customview.CommonTitleBar
         android:id="@+id/title_layout"
         style="@style/head_default"
-        app:titleTxt="贴纸相机" />
+        app:titleTxt="弹幕相机" />
 
 
     <android.support.v7.widget.RecyclerView

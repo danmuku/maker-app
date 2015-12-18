@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.danmuku.maker.App;
-import com.danmuku.maker.AppConstants;
 import com.danmuku.maker.R;
 import com.danmuku.maker.app.camera.util.EffectUtil;
 import com.danmuku.maker.app.model.TagItem;
@@ -25,7 +23,6 @@ public class LabelView extends LinearLayout {
     private TagItem tagInfo = new TagItem();
     private float parentWidth = 0;
     private float parentHeight = 0;
-    private ImageView labelIcon;
     private TextView labelTxtLeft;
     private TextView labelTxtRight;
 
@@ -36,7 +33,6 @@ public class LabelView extends LinearLayout {
     public LabelView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelIcon = (ImageView) findViewById(R.id.label_icon);
         labelTxtLeft = (TextView) findViewById(R.id.label_text_left);
         labelTxtRight = (TextView) findViewById(R.id.label_text_right);
     }
@@ -44,7 +40,6 @@ public class LabelView extends LinearLayout {
     public LabelView(Context context, AttributeSet attr) {
         super(context, attr);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelIcon = (ImageView) findViewById(R.id.label_icon);
         labelTxtLeft = (TextView) findViewById(R.id.label_text_left);
         labelTxtRight = (TextView) findViewById(R.id.label_text_right);
     }
@@ -55,9 +50,6 @@ public class LabelView extends LinearLayout {
         tagInfo.setType(tagItem.getType());
         labelTxtLeft.setText(tagItem.getName());
         labelTxtRight.setText(tagItem.getName());
-        if (tagItem.getType() == AppConstants.POST_TYPE_POI) {
-            labelIcon.setImageResource(R.drawable.point_poi);
-        }
     }
 
     /**
@@ -124,7 +116,7 @@ public class LabelView extends LinearLayout {
             post(new Runnable() {
                 @Override
                 public void run() {
-                    int toLeft = left - getWidth() + labelIcon.getWidth();
+                    int toLeft = left - getWidth();
                     setupLocation(toLeft, top);
                     labelTxtLeft.setVisibility(View.VISIBLE);
                 }
@@ -195,7 +187,6 @@ public class LabelView extends LinearLayout {
         as.setDuration(ANIMATIONEACHOFFSET * 3);
         as.addAnimation(sa);
         as.addAnimation(aniAlp);
-        labelIcon.startAnimation(as);
     }
 
     public void updateLocation(int x, int y) {
