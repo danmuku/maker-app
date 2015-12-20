@@ -2,11 +2,13 @@ package com.danmuku.maker.app.camera.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.LabeledIntent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danmuku.maker.R;
+import com.danmuku.maker.app.ui.MainActivity;
 import com.danmuku.maker.util.FileUtils;
 import com.danmuku.maker.util.ImageUtils;
 import com.danmuku.maker.util.StringUtils;
@@ -45,6 +48,8 @@ import de.greenrobot.event.EventBus;
  */
 public class PhotoProcessActivity extends CameraBaseActivity {
 
+    private static final String TAG = "PhotoProcessActivity";
+
     //滤镜图片
     @InjectView(R.id.draw_image)
     ImageView imageView;
@@ -72,6 +77,8 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     //标签区域
     private View commonLabelArea;
 
+    private FeedItem feedItem = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +95,15 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         ImageUtils.asyncLoadSmallImage(this, getIntent().getData(), result -> smallImageBackgroud = result);
 
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            feedItem = (FeedItem) bundle.getSerializable("lables");
+            List<TagItem> tagItems = feedItem.getTagList();
+            LabelView labelView;
+            for(int i = 0; i < tagItems.size(); i++){
+                addOldLable(tagItems.get(i));
+            }
+        }
     }
 
     private void initView() {
@@ -140,11 +156,9 @@ public class PhotoProcessActivity extends CameraBaseActivity {
             drawArea.postInvalidate();
         });
 
-
         titleBar.setRightBtnOnclickListener(v -> {
             savePicture();
         });
-
     }
 
     //保存图片
@@ -203,7 +217,12 @@ public class PhotoProcessActivity extends CameraBaseActivity {
             }
 
             //将图片信息通过EventBus发送到MainActivity
-            FeedItem feedItem = new FeedItem(tagInfoList, fileName);
+
+            if(feedItem != null){
+                feedItem.setTagList(tagInfoList);
+            }else{
+                feedItem = new FeedItem(tagInfoList, fileName, 0);
+            }
             EventBus.getDefault().post(feedItem);
             CameraManager.getInst().close();
         }
@@ -260,6 +279,15 @@ public class PhotoProcessActivity extends CameraBaseActivity {
             left = mImageView.getWidth() / 2 - 10;
             top = mImageView.getWidth() / 2;
         }
+        LabelView label = new LabelView(PhotoProcessActivity.this);
+        label.init(tagItem);
+        EffectUtil.addLabelEditable(mImageView, drawArea, label, left, top);
+        labels.add(label);
+    }
+
+    private void addOldLable(TagItem tagItem){
+        int left = (int)tagItem.getX();
+        int top = (int)tagItem.getY();
         LabelView label = new LabelView(PhotoProcessActivity.this);
         label.init(tagItem);
         EffectUtil.addLabelEditable(mImageView, drawArea, label, left, top);

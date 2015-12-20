@@ -20,7 +20,7 @@ import com.danmuku.maker.app.model.TagItem;
 
 public class LabelView extends LinearLayout {
 
-    private TagItem tagInfo = new TagItem();
+    private TagItem tagInfo;
     private float parentWidth = 0;
     private float parentHeight = 0;
     private TextView labelTxt;
@@ -33,12 +33,14 @@ public class LabelView extends LinearLayout {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
         labelTxt = (TextView) findViewById(R.id.label_text);
+        tagInfo = new TagItem();
     }
 
     public LabelView(Context context, AttributeSet attr) {
         super(context, attr);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
         labelTxt = (TextView) findViewById(R.id.label_text);
+        tagInfo = new TagItem();
     }
 
     public void init(TagItem tagItem) {

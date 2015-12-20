@@ -8,14 +8,50 @@
         style="@style/head_default"
         app:titleTxt="弹幕相机" />
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/title_layout"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:layout_below="@+id/title_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/item_process_layout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/height_100px"
+        android:layout_centerHorizontal="true">
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete"
+            app:fab_colorNormal="?attr/colorPrimary"
+            app:fab_colorPressed="?attr/colorPrimaryDark"
+            app:fab_colorRipple="?attr/colorPrimary" />
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:src="@drawable/save"
+            app:fab_colorNormal="?attr/colorPrimary"
+            app:fab_colorPressed="?attr/colorPrimaryDark"
+            app:fab_colorRipple="?attr/colorPrimary" />
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:src="@drawable/share"
+            app:fab_colorNormal="?attr/colorPrimary"
+            app:fab_colorPressed="?attr/colorPrimaryDark"
+            app:fab_colorRipple="?attr/colorPrimary" />
+    </LinearLayout>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
