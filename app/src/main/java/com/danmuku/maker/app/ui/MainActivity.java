@@ -1,6 +1,7 @@
 package com.danmuku.maker.app.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,8 +20,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.danmuku.maker.R;
 import com.danmuku.maker.util.DataUtils;
+import com.danmuku.maker.util.FileUtils;
+import com.danmuku.maker.util.ImageUtils;
 import com.danmuku.maker.util.StringUtils;
 import com.danmuku.maker.customview.LabelView;
+import com.danmuku.maker.util.TimeUtils;
 import com.melnykov.fab.FloatingActionButton;
 import com.danmuku.maker.App;
 import com.danmuku.maker.AppConstants;
@@ -30,8 +34,10 @@ import com.danmuku.maker.app.model.TagItem;
 import com.danmuku.maker.base.BaseActivity;
 import com.danmuku.maker.app.camera.ui.PhotoProcessActivity;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -136,11 +142,21 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.save:
-                Toast.makeText(this, "保存按钮点击", Toast.LENGTH_LONG).show();
+                View view = mRecyclerView.getChildAt(position);
+                view.setDrawingCacheEnabled(true);
+                view.buildDrawingCache();
+                Bitmap bitmap = view.getDrawingCache();
+                String picName = "danmuku" + TimeUtils.dtFormat(new Date(), "yyyyMMddHHmmss") + ".png";
+                try {
+                    ImageUtils.saveToFile(FileUtils.getInst().getSystemPhotoPath() + "/" + picName, false, bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                toast("保存已保存到相册", Toast.LENGTH_LONG);
                 break;
 
             case R.id.share:
-                Toast.makeText(this, "分享", Toast.LENGTH_LONG).show();
+                toast("分享成功", Toast.LENGTH_LONG);
                 break;
 
         }
