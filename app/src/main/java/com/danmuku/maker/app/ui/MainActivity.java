@@ -36,8 +36,6 @@ import com.danmuku.maker.base.BaseActivity;
 import com.danmuku.maker.app.camera.ui.PhotoProcessActivity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -141,8 +139,15 @@ public class MainActivity extends BaseActivity {
         int position = mAdapter.getPosition();
         switch (id) {
             case R.id.delete:
+
+                // delete the file
+                FeedItem feedItem = feedList.get(position);
+                File file = new File(feedItem.getImgPath());
+                file.delete();
+
                 mAdapter.remove(position);
                 feedList.remove(position);
+
                 break;
 
             case R.id.save:
