@@ -31,6 +31,7 @@ import com.danmuku.maker.app.model.TagItem;
 import com.danmuku.maker.base.BaseActivity;
 import com.danmuku.maker.app.camera.ui.PhotoProcessActivity;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +146,22 @@ public class MainActivity extends BaseActivity {
 
         }
         return super.onContextItemSelected(item);
+    }
+
+
+    //enable为true时，菜单添加图标有效，enable为false时无效。4.0系统默认无效
+    private void setIconEnable(Menu menu, boolean enable) {
+        try {
+            Class<?> clazz = Class.forName("com.android.internal.view.menu.MenuBuilder");
+            Method m = clazz.getDeclaredMethod("setOptionalIconsVisible", boolean.class);
+            m.setAccessible(true);
+
+            //MenuBuilder实现Menu接口，创建菜单时，传进来的menu其实就是MenuBuilder对象(java的多态特征)
+            m.invoke(menu, enable);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -269,6 +286,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            setIconEnable(contextMenu, true);
             contextMenu.setHeaderTitle("操作");
             getMenuInflater().inflate(R.menu.menu_main_context, contextMenu);
         }
