@@ -67,12 +67,10 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     //当前图片
     private Bitmap currentBitmap;
 
-    //用于预览的小图片
-    private Bitmap smallImageBackgroud;
     //小白点标签
     private LabelView emptyLabelView;
 
-    private List<LabelView> labels = new ArrayList<LabelView>();
+    private List<LabelView> labels = new ArrayList<>();
 
     //标签区域
     private View commonLabelArea;
@@ -93,14 +91,12 @@ public class PhotoProcessActivity extends CameraBaseActivity {
             imageView.setImageBitmap(currentBitmap);
         });
 
-        ImageUtils.asyncLoadSmallImage(this, getIntent().getData(), result -> smallImageBackgroud = result);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
+        if (bundle != null) {
             feedItem = (FeedItem) bundle.getSerializable("lables");
             List<TagItem> tagItems = feedItem.getTagList();
-            LabelView labelView;
-            for(int i = 0; i < tagItems.size(); i++){
+            for (int i = 0; i < tagItems.size(); i++) {
                 addOldLable(tagItems.get(i));
             }
         }
@@ -170,8 +166,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
         RectF dst = new RectF(0, 0, mImageView.getWidth(), mImageView.getHeight());
 
         cv.drawBitmap(currentBitmap, null, dst, null);
-        //加贴纸水印
-        EffectUtil.applyOnSave(cv, mImageView);
 
         new SavePicToFileTask().execute(newBitmap);
     }
@@ -190,8 +184,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
             String fileName = null;
             try {
                 bitmap = params[0];
-
-                String picName = TimeUtils.dtFormat(new Date(), "yyyyMMddHHmmss");
+                String picName = TimeUtils.dtFormat(new Date(), "yyyyMMddHHmmss") + ".png";
                 fileName = ImageUtils.saveToFile(FileUtils.getInst().getPhotoSavedPath() + "/" + picName, false, bitmap);
 
             } catch (Exception e) {
@@ -218,9 +211,9 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
             //将图片信息通过EventBus发送到MainActivity
 
-            if(feedItem != null){
+            if (feedItem != null) {
                 feedItem.setTagList(tagInfoList);
-            }else{
+            } else {
                 feedItem = new FeedItem(tagInfoList, fileName, 0);
             }
             EventBus.getDefault().post(feedItem);
@@ -285,9 +278,9 @@ public class PhotoProcessActivity extends CameraBaseActivity {
         labels.add(label);
     }
 
-    private void addOldLable(TagItem tagItem){
-        int left = (int)tagItem.getX();
-        int top = (int)tagItem.getY();
+    private void addOldLable(TagItem tagItem) {
+        int left = (int) tagItem.getX();
+        int top = (int) tagItem.getY();
         LabelView label = new LabelView(PhotoProcessActivity.this);
         label.init(tagItem);
         EffectUtil.addLabelEditable(mImageView, drawArea, label, left, top);
