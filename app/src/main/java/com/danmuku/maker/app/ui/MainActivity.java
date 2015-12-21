@@ -148,6 +148,8 @@ public class MainActivity extends BaseActivity {
                 mAdapter.remove(position);
                 feedList.remove(position);
 
+                DataUtils.setStringPreferences(App.getApp(), AppConstants.FEED_INFO, JSON.toJSONString(feedList));
+
                 break;
 
             case R.id.save:

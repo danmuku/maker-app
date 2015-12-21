@@ -190,7 +190,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
             //将照片信息保存至sharedPreference
             //保存标签信息
-            List<TagItem> tagInfoList = new ArrayList<TagItem>();
+            List<TagItem> tagInfoList = new ArrayList<>();
             for (LabelView label : labels) {
                 tagInfoList.add(label.getTagInfo());
             }
