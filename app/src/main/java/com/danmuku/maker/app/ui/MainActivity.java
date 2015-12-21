@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -34,6 +35,9 @@ import com.danmuku.maker.app.model.TagItem;
 import com.danmuku.maker.base.BaseActivity;
 import com.danmuku.maker.app.camera.ui.PhotoProcessActivity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -156,7 +160,22 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.share:
-                toast("分享成功", Toast.LENGTH_LONG);
+                view = mRecyclerView.getChildAt(position);
+                view.setDrawingCacheEnabled(true);
+                view.buildDrawingCache();
+                bitmap = view.getDrawingCache();
+
+                picName = "danmuku" + TimeUtils.dtFormat(new Date(), "yyyyMMddHHmmss") + ".png";
+                try {
+                    ImageUtils.saveToFile(FileUtils.getInst().getSystemPhotoPath() + "/" + picName, false, bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, FileUtils.getInst().getSystemPhotoPath() + "/" + picName);
+                shareIntent.setType("image/png");
+                startActivity(Intent.createChooser(shareIntent, "分享"));
                 break;
 
         }
