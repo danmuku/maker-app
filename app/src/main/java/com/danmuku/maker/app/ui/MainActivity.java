@@ -6,21 +6,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.danmuku.maker.R;
 import com.danmuku.maker.util.DataUtils;
-import com.danmuku.maker.util.FileUtils;
 import com.danmuku.maker.util.StringUtils;
 import com.danmuku.maker.customview.LabelView;
 import com.melnykov.fab.FloatingActionButton;
@@ -30,8 +29,6 @@ import com.danmuku.maker.app.camera.CameraManager;
 import com.danmuku.maker.app.model.FeedItem;
 import com.danmuku.maker.app.model.TagItem;
 import com.danmuku.maker.base.BaseActivity;
-import com.danmuku.maker.app.camera.listener.MyItemClickListener;
-import com.danmuku.maker.app.camera.listener.MyItemLongClickListener;
 import com.danmuku.maker.app.camera.ui.PhotoProcessActivity;
 
 import java.util.ArrayList;
@@ -46,20 +43,10 @@ import de.greenrobot.event.EventBus;
  */
 public class MainActivity extends BaseActivity {
 
-    private static final String TAG = "MainActivity";
-    private int itemId = 0;
     @InjectView(R.id.fab)
     FloatingActionButton fab;
     @InjectView(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    @InjectView(R.id.item_process_layout)
-    View buttonsView;
-    @InjectView(R.id.deleteButton)
-    FloatingActionButton deleteBtn;
-    @InjectView(R.id.saveButton)
-    FloatingActionButton saveBtn;
-    @InjectView(R.id.shareButton)
-    FloatingActionButton shareBtn;
 
     private List<FeedItem> feedList;
     private PictureAdapter mAdapter;
@@ -107,67 +94,49 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         titleBar.hideLeftBtn();
         titleBar.hideRightBtn();
-        buttonsView.setVisibility(View.GONE);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new PictureAdapter(new MyItemClickListener(){
-            @Override
-            public void onItemClick(View view, int position) {
-                //单击进入编辑页面
-                //EditTextActivity.openTextEdit(MainActivity.this, "", 20, AppConstants.ACTION_EDIT_LABEL);
-                Intent i = new Intent(MainActivity.this, PhotoProcessActivity.class);
-                Log.v(TAG, "position=" + position);
-                FeedItem feedItem = feedList.get(position);
-                feedItem.setPosition(position);
-                String path = "file://" + feedItem.getImgPath();
-                i.setData(Uri.parse(path));
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("lables", feedItem);
-                i.putExtras(bundle);
-                startActivity(i);
-            }
-        },
-        new MyItemLongClickListener() {
-            @Override
-            public void onItemLongClick(View view, int position) {
-                //长按弹出三个选项：删除、保存、分享
-                buttonsView.setVisibility(View.VISIBLE);
-                itemId = position;
-            }
-        });
+        mAdapter = new PictureAdapter();
         mRecyclerView.setAdapter(mAdapter);
         fab.setOnClickListener(v -> CameraManager.getInst().openCamera(MainActivity.this));
-        //删除按钮
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAdapter.remove(itemId);
-                feedList.remove(itemId);
-                buttonsView.setVisibility(View.GONE);
-            }
-        });
-        //保存按钮
-        saveBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-
-                buttonsView.setVisibility(View.GONE);
-            }
-        });
-        //分享按钮
-        shareBtn.setOnClickListener(new  View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-
-                buttonsView.setVisibility(View.GONE);
-            }
-        });
+//        //删除按钮
+//        deleteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                mAdapter.remove(itemId);
+//                feedList.remove(itemId);
+//                buttonsView.setVisibility(View.GONE);
+//            }
+//        });
+//        //保存按钮
+//        saveBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                buttonsView.setVisibility(View.GONE);
+//            }
+//        });
+//        //分享按钮
+//        shareBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                buttonsView.setVisibility(View.GONE);
+//            }
+//        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.menu_main_context, menu);
+        registerForContextMenu(mRecyclerView);
     }
 
     @Override
@@ -182,17 +151,16 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
     }
+
 
     //照片适配器
     public class PictureAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         private List<FeedItem> items = new ArrayList<FeedItem>();
-        private MyItemClickListener mItemClickListener;
-        private MyItemLongClickListener mItemLongClickListener;
 
         public void setList(List<FeedItem> list) {
             if (items.size() > 0) {
@@ -201,16 +169,10 @@ public class MainActivity extends BaseActivity {
             items.addAll(list);
         }
 
-        public PictureAdapter(MyItemClickListener clickListener, MyItemLongClickListener longClickListener){
-            this.mItemClickListener = clickListener;
-            this.mItemLongClickListener = longClickListener;
-        }
-
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_picture, parent, false);
-            ViewHolder vh = new ViewHolder(v, mItemClickListener, mItemLongClickListener);
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override
@@ -234,6 +196,7 @@ public class MainActivity extends BaseActivity {
             super.onViewRecycled(holder);
         }
 
+
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
             super.onViewAttachedToWindow(holder);
@@ -252,21 +215,15 @@ public class MainActivity extends BaseActivity {
                 }
             }, 200);
         }
-
-        public void remove(int position){
-            items.remove(position);
-            notifyItemRemoved(position);
-        }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
         @InjectView(R.id.pictureLayout)
         RelativeLayout pictureLayout;
         @InjectView(R.id.picture)
         ImageView picture;
-
-        private MyItemClickListener mOnClickListener;
-        private MyItemLongClickListener mOnLongClickListener;
 
         private List<TagItem> tagList = new ArrayList<>();
 
@@ -281,29 +238,27 @@ public class MainActivity extends BaseActivity {
             this.tagList.addAll(tagList);
         }
 
-        public ViewHolder(View itemView, MyItemClickListener onItemClickListener, MyItemLongClickListener onItemLongClickListener) {
+        public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            this.mOnClickListener  = onItemClickListener;
-            this.mOnLongClickListener = onItemLongClickListener;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //单击进入编辑页面
+                    Intent i = new Intent(MainActivity.this, PhotoProcessActivity.class);
+                    FeedItem feedItem = feedList.get(getPosition());
+                    feedItem.setPosition(getPosition());
+                    String path = "file://" + feedItem.getImgPath();
+                    i.setData(Uri.parse(path));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("lables", feedItem);
+                    i.putExtras(bundle);
+                    startActivity(i);
+                }
+            });
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            if (mOnLongClickListener != null){
-                mOnLongClickListener.onItemLongClick(itemView,getPosition());
-            }
-            return true;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mOnClickListener != null){
-                mOnClickListener.onItemClick(itemView,getPosition());
-            }
-        }
     }
 
 }
