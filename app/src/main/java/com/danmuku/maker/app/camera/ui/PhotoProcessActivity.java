@@ -67,9 +67,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     //当前图片
     private Bitmap currentBitmap;
 
-    //小白点标签
-    private LabelView emptyLabelView;
-
     private List<LabelView> labels = new ArrayList<>();
 
     //标签区域
@@ -120,13 +117,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
         imageView.setLayoutParams(rparams);
 
 
-        //初始化空白标签
-        emptyLabelView = new LabelView(this);
-        emptyLabelView.setEmpty();
-        EffectUtil.addLabelEditable(mImageView, drawArea, emptyLabelView,
-                mImageView.getWidth() / 2, mImageView.getWidth() / 2);
-        emptyLabelView.setVisibility(View.INVISIBLE);
-
         //初始化推荐标签栏
         commonLabelArea = LayoutInflater.from(PhotoProcessActivity.this).inflate(
                 R.layout.view_label_bottom, null);
@@ -143,10 +133,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         mImageView.setOnDrawableEventListener(wpEditListener);
         mImageView.setSingleTapListener(() -> {
-            emptyLabelView.updateLocation((int) mImageView.getmLastMotionScrollX(),
-                    (int) mImageView.getmLastMotionScrollY());
-            emptyLabelView.setVisibility(View.VISIBLE);
-
             EditTextActivity.openTextEdit(PhotoProcessActivity.this, "", 8, AppConstants.ACTION_EDIT_LABEL);
 
             drawArea.postInvalidate();
@@ -248,9 +234,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         @Override
         public void onClick(final LabelView label) {
-            if (label.equals(emptyLabelView)) {
-                return;
-            }
             alert("温馨提示", "是否需要删除该标签！", "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -264,10 +247,8 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
     //添加标签
     private void addLabel(TagItem tagItem) {
-        emptyLabelView.setVisibility(View.INVISIBLE);
-
-        int left = emptyLabelView.getLeft();
-        int top = emptyLabelView.getTop();
+        int left = 0;
+        int top = 0;
         if (labels.size() == 0 && left == 0 && top == 0) {
             left = mImageView.getWidth() / 2 - 10;
             top = mImageView.getWidth() / 2;
