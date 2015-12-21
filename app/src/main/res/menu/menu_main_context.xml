@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/about_us"
+        android:id="@+id/delete"
         android:icon="@android:drawable/ic_menu_view"
         android:orderInCategory="100"
         android:title="删除" />
 
     <item
-        android:id="@+id/check_update"
+        android:id="@+id/save"
         android:icon="@android:drawable/ic_menu_help"
         android:orderInCategory="100"
         android:title="保存" />
 
     <item
-        android:id="@+id/exit"
+        android:id="@+id/share"
         android:icon="@android:drawable/ic_menu_revert"
         android:orderInCategory="100"
         android:title="分享" />

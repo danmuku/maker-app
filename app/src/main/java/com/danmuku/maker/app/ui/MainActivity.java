@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.danmuku.maker.R;
@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
 
     public void onEventMainThread(FeedItem feedItem) {
         if (feedList == null) {
-            feedList = new ArrayList<FeedItem>();
+            feedList = new ArrayList<>();
         }
         feedList.add(feedItem.getPosition(), feedItem);
         DataUtils.setStringPreferences(App.getApp(), AppConstants.FEED_INFO, JSON.toJSONString(feedList));
@@ -98,32 +98,8 @@ public class MainActivity extends BaseActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PictureAdapter();
         mRecyclerView.setAdapter(mAdapter);
+        this.registerForContextMenu(mRecyclerView);
         fab.setOnClickListener(v -> CameraManager.getInst().openCamera(MainActivity.this));
-//        //删除按钮
-//        deleteBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                mAdapter.remove(itemId);
-//                feedList.remove(itemId);
-//                buttonsView.setVisibility(View.GONE);
-//            }
-//        });
-//        //保存按钮
-//        saveBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                buttonsView.setVisibility(View.GONE);
-//            }
-//        });
-//        //分享按钮
-//        shareBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                buttonsView.setVisibility(View.GONE);
-//            }
-//        });
     }
 
 
@@ -133,20 +109,13 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.menu_main_context, menu);
-        registerForContextMenu(mRecyclerView);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -156,17 +125,49 @@ public class MainActivity extends BaseActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        int position = mAdapter.getPosition();
+        switch (id) {
+            case R.id.delete:
+                mAdapter.remove(position);
+                feedList.remove(position);
+                break;
+
+            case R.id.save:
+                Toast.makeText(this, "保存按钮点击", Toast.LENGTH_LONG).show();
+                break;
+
+            case R.id.share:
+                Toast.makeText(this, "分享", Toast.LENGTH_LONG).show();
+                break;
+
+        }
+        return super.onContextItemSelected(item);
+    }
+
 
     //照片适配器
     public class PictureAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-        private List<FeedItem> items = new ArrayList<FeedItem>();
+        private List<FeedItem> items = new ArrayList<>();
 
         public void setList(List<FeedItem> list) {
             if (items.size() > 0) {
                 items.clear();
             }
             items.addAll(list);
+        }
+
+        private int position;
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
         }
 
         @Override
@@ -177,10 +178,14 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-
             FeedItem feedItem = items.get(position);
             holder.picture.setImageBitmap(BitmapFactory.decodeFile(feedItem.getImgPath()));
             holder.setTagList(feedItem.getTagList());
+
+            holder.itemView.setOnLongClickListener(v -> {
+                setPosition(holder.getAdapterPosition());
+                return false;
+            });
 
         }
 
@@ -193,6 +198,7 @@ public class MainActivity extends BaseActivity {
         public void onViewRecycled(ViewHolder holder) {
             // 将标签移除,避免回收使用时标签重复
             holder.pictureLayout.removeViews(1, holder.pictureLayout.getChildCount() - 1);
+            holder.itemView.setOnLongClickListener(null);
             super.onViewRecycled(holder);
         }
 
@@ -201,24 +207,26 @@ public class MainActivity extends BaseActivity {
         public void onViewAttachedToWindow(ViewHolder holder) {
             super.onViewAttachedToWindow(holder);
             // 这里可能有问题 延迟200毫秒加载是为了等pictureLayout已经在屏幕上显示getWidth才为具体的值
-            holder.pictureLayout.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    for (TagItem feedImageTag : holder.getTagList()) {
-                        LabelView tagView = new LabelView(MainActivity.this);
-                        tagView.init(feedImageTag);
-                        tagView.draw(holder.pictureLayout,
-                                (int) (feedImageTag.getX() * ((double) holder.pictureLayout.getWidth() / (double) 1242)),
-                                (int) (feedImageTag.getY() * ((double) holder.pictureLayout.getWidth() / (double) 1242)));
-                        tagView.wave();
-                    }
+            holder.pictureLayout.getHandler().postDelayed(() -> {
+                for (TagItem feedImageTag : holder.getTagList()) {
+                    LabelView tagView = new LabelView(MainActivity.this);
+                    tagView.init(feedImageTag);
+                    tagView.draw(holder.pictureLayout,
+                            (int) (feedImageTag.getX() * ((double) holder.pictureLayout.getWidth() / (double) 1242)),
+                            (int) (feedImageTag.getY() * ((double) holder.pictureLayout.getWidth() / (double) 1242)));
+                    tagView.wave();
                 }
             }, 200);
+        }
+
+        public void remove(int position) {
+            items.remove(position);
+            notifyItemRemoved(position);
         }
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         @InjectView(R.id.pictureLayout)
         RelativeLayout pictureLayout;
@@ -242,23 +250,28 @@ public class MainActivity extends BaseActivity {
             super(itemView);
             ButterKnife.inject(this, itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //单击进入编辑页面
-                    Intent i = new Intent(MainActivity.this, PhotoProcessActivity.class);
-                    FeedItem feedItem = feedList.get(getPosition());
-                    feedItem.setPosition(getPosition());
-                    String path = "file://" + feedItem.getImgPath();
-                    i.setData(Uri.parse(path));
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("lables", feedItem);
-                    i.putExtras(bundle);
-                    startActivity(i);
-                }
+            itemView.setOnCreateContextMenuListener(this);
+
+            itemView.setOnClickListener(view -> {
+                //单击进入编辑页面
+                Intent i = new Intent(MainActivity.this, PhotoProcessActivity.class);
+                FeedItem feedItem = feedList.get(getAdapterPosition());
+                feedItem.setPosition(getAdapterPosition());
+                String path = "file://" + feedItem.getImgPath();
+                i.setData(Uri.parse(path));
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("lables", feedItem);
+                i.putExtras(bundle);
+                startActivity(i);
             });
         }
 
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            contextMenu.setHeaderTitle("操作");
+            getMenuInflater().inflate(R.menu.menu_main_context, contextMenu);
+        }
     }
 
 }
