@@ -280,9 +280,6 @@ public class MainActivity extends BaseActivity {
                 for (TagItem feedImageTag : holder.getTagList()) {
                     LabelView tagView = new LabelView(MainActivity.this);
                     tagView.init(feedImageTag);
-                    //设置 tag 不可点击
-                    tagView.labelTxt.setFocusable(false);
-                    tagView.labelTxt.setFocusableInTouchMode(false);
                     tagView.draw(holder.pictureLayout,
                             (int) (feedImageTag.getX() * ((double) holder.pictureLayout.getWidth() / (double) 1242)),
                             (int) (feedImageTag.getY() * ((double) holder.pictureLayout.getWidth() / (double) 1242)));

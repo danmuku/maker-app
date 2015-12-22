@@ -24,7 +24,7 @@ public class LabelView extends LinearLayout {
     private TagItem tagInfo;
     private float parentWidth = 0;
     private float parentHeight = 0;
-    public EditText labelTxt;
+    public TextView labelTxt;
 
     public TagItem getTagInfo() {
         return tagInfo;
@@ -33,14 +33,14 @@ public class LabelView extends LinearLayout {
     public LabelView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelTxt = (EditText) findViewById(R.id.label_text);
+        labelTxt = (TextView) findViewById(R.id.label_text);
         tagInfo = new TagItem();
     }
 
     public LabelView(Context context, AttributeSet attr) {
         super(context, attr);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelTxt = (EditText) findViewById(R.id.label_text);
+        labelTxt = (TextView) findViewById(R.id.label_text);
         tagInfo = new TagItem();
     }
 

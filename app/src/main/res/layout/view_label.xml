@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <EditText
+    <TextView
         android:id="@+id/label_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,6 @@
         android:paddingRight="12dp"
         android:paddingTop="2dp"
         android:singleLine="true"
-        android:background="@null"
         android:textColor="@color/red"
         android:textSize="26sp"
         android:visibility="invisible" />
