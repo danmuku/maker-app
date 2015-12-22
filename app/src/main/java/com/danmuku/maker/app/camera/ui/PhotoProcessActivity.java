@@ -90,9 +90,8 @@ public class PhotoProcessActivity extends CameraBaseActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             feedItem = (FeedItem) bundle.getSerializable("lables");
-            List<TagItem> tagItems = feedItem.getTagList();
-            for (int i = 0; i < tagItems.size(); i++) {
-                addOldLable(tagItems.get(i));
+            for (TagItem tagItem : feedItem.getTagList()) {
+                addOldLable(tagItem);
             }
         }
     }
@@ -186,7 +185,6 @@ public class PhotoProcessActivity extends CameraBaseActivity {
                 return;
             }
 
-            //将照片信息保存至sharedPreference
             //保存标签信息
             List<TagItem> tagInfoList = new ArrayList<>();
             for (LabelView label : labels) {
@@ -198,7 +196,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
             if (feedItem != null) {
                 feedItem.setTagList(tagInfoList);
             } else {
-                feedItem = new FeedItem(tagInfoList, fileName, 0);
+                feedItem = new FeedItem(tagInfoList, fileName);
             }
             EventBus.getDefault().post(feedItem);
             CameraManager.getInst().close();

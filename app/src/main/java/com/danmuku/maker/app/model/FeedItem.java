@@ -8,7 +8,6 @@ public class FeedItem implements Serializable {
 
     private String imgPath;
     private List<TagItem> tagList;
-    private int position;
 
     public FeedItem() {
 
@@ -17,14 +16,8 @@ public class FeedItem implements Serializable {
     public FeedItem(List<TagItem> tagList, String imgPath) {
         this.imgPath = imgPath;
         this.tagList = tagList;
-        this.position = 0;
     }
 
-    public FeedItem(List<TagItem> tagList, String imgPath, int position) {
-        this.imgPath = imgPath;
-        this.tagList = tagList;
-        this.position = 0;
-    }
 
     public List<TagItem> getTagList() {
         return tagList;
@@ -42,9 +35,5 @@ public class FeedItem implements Serializable {
         this.imgPath = imgPath;
     }
 
-    public int getPosition(){
-        return position;
-    }
 
-    public void setPosition(int position){this.position = position;}
 }

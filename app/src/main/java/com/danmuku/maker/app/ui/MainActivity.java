@@ -85,7 +85,19 @@ public class MainActivity extends BaseActivity {
         if (feedList == null) {
             feedList = new ArrayList<>();
         }
-        feedList.add(feedItem.getPosition(), feedItem);
+
+        // 如果存在，覆盖
+        boolean exist = false;
+        for (FeedItem item : feedList) {
+            if (item.getImgPath().equals(feedItem.getImgPath())) {
+                item.setTagList(feedItem.getTagList());
+                exist = true;
+            }
+        }
+        //不存在，添加
+        if (!exist) {
+            feedList.add(feedItem);
+        }
         DataUtils.setStringPreferences(App.getApp(), AppConstants.FEED_INFO, JSON.toJSONString(feedList));
         mAdapter.setList(feedList);
         mAdapter.notifyDataSetChanged();
@@ -316,7 +328,6 @@ public class MainActivity extends BaseActivity {
                 //单击进入编辑页面
                 Intent i = new Intent(MainActivity.this, PhotoProcessActivity.class);
                 FeedItem feedItem = feedList.get(getAdapterPosition());
-                feedItem.setPosition(getAdapterPosition());
                 String path = "file://" + feedItem.getImgPath();
                 i.setData(Uri.parse(path));
                 Bundle bundle = new Bundle();
