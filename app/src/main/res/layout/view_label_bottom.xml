@@ -29,31 +29,31 @@
 
         <TextView
             style="@style/text_default"
-            android:text="这只是一个标签~" />
+            android:text="发条弹幕压压惊Σ(っ °Д °;)っ~" />
 
         <TextView
             style="@style/text_default"
-            android:text="nice" />
+            android:text="我来增加一发弹幕！！！*罒▽罒*" />
 
         <TextView
             style="@style/text_default"
-            android:text="cute" />
+            android:text="嘴上说着不要，身体却很诚实呢！◠‿◠" />
 
         <TextView
             style="@style/text_default"
-            android:text="哈哈哈哈" />
+            android:text="画面太美我不敢看(〃∀〃)" />
 
         <TextView
             style="@style/text_default"
-            android:text="biztech" />
+            android:text="(*°ω°*)ﾉ非战斗人员请撤离！！" />
 
         <TextView
             style="@style/text_default"
-            android:text="小鲜肉" />
+            android:text="认真你就输啦 (・ω・)ノ- ( ゜- ゜)つ" />
 
         <TextView
             style="@style/text_default"
-            android:text="你好，世界" />
+            android:text="然而并没有什么卵用(*ﾟ▽ﾟ)ﾉ︵○○○" />
 
     </com.danmuku.maker.customview.FlowLayout>
 

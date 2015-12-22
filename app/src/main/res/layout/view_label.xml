@@ -10,13 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="2dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="12dp"
-        android:paddingTop="2dp"
         android:singleLine="true"
         android:textColor="@color/red"
-        android:textSize="26sp"
-        android:visibility="invisible" />
+        android:textSize="16sp" />
 
 </LinearLayout>
