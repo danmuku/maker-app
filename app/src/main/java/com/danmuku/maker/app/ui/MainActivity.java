@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -269,6 +268,9 @@ public class MainActivity extends BaseActivity {
                 for (TagItem feedImageTag : holder.getTagList()) {
                     LabelView tagView = new LabelView(MainActivity.this);
                     tagView.init(feedImageTag);
+                    //设置 tag 不可点击
+                    tagView.labelTxt.setFocusable(false);
+                    tagView.labelTxt.setFocusableInTouchMode(false);
                     tagView.draw(holder.pictureLayout,
                             (int) (feedImageTag.getX() * ((double) holder.pictureLayout.getWidth() / (double) 1242)),
                             (int) (feedImageTag.getY() * ((double) holder.pictureLayout.getWidth() / (double) 1242)));

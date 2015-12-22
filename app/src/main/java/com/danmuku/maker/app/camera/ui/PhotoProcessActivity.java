@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danmuku.maker.R;
-import com.danmuku.maker.app.ui.MainActivity;
 import com.danmuku.maker.util.FileUtils;
 import com.danmuku.maker.util.ImageUtils;
 import com.danmuku.maker.util.StringUtils;
@@ -48,7 +47,6 @@ import de.greenrobot.event.EventBus;
  */
 public class PhotoProcessActivity extends CameraBaseActivity {
 
-    private static final String TAG = "PhotoProcessActivity";
 
     //滤镜图片
     @InjectView(R.id.draw_image)

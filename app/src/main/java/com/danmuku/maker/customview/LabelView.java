@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class LabelView extends LinearLayout {
     private TagItem tagInfo;
     private float parentWidth = 0;
     private float parentHeight = 0;
-    private TextView labelTxt;
+    public EditText labelTxt;
 
     public TagItem getTagInfo() {
         return tagInfo;
@@ -32,14 +33,14 @@ public class LabelView extends LinearLayout {
     public LabelView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelTxt = (TextView) findViewById(R.id.label_text);
+        labelTxt = (EditText) findViewById(R.id.label_text);
         tagInfo = new TagItem();
     }
 
     public LabelView(Context context, AttributeSet attr) {
         super(context, attr);
         LayoutInflater.from(context).inflate(R.layout.view_label, this);
-        labelTxt = (TextView) findViewById(R.id.label_text);
+        labelTxt = (EditText) findViewById(R.id.label_text);
         tagInfo = new TagItem();
     }
 
