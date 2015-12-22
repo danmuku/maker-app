@@ -234,6 +234,11 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         @Override
         public void onClick(final LabelView label) {
+            toast("点击", Toast.LENGTH_LONG);
+        }
+
+        @Override
+        public void onLongClick(LabelView label) {
             alert("温馨提示", "是否需要删除该标签！", "确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

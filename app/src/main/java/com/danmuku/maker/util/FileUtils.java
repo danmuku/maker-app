@@ -21,8 +21,8 @@ import java.util.Collections;
 
 public class FileUtils {
 
-    private static String    BASE_PATH;
-    private static String    STICKER_BASE_PATH;
+    private static String BASE_PATH;
+    private static String STICKER_BASE_PATH;
 
     private static FileUtils mInstance;
 
@@ -43,6 +43,7 @@ public class FileUtils {
 
     /**
      * 获取文件夹大小
+     *
      * @param file File实例
      * @return long 单位为K
      * @throws Exception
@@ -78,6 +79,7 @@ public class FileUtils {
         String md5Str = MD5Util.getMD5(imageUrl).replace("-", "mm");
         return getBasePath(packageId) + md5Str;
     }
+
     //读取assets文件
     public String readFromAsset(String fileName) {
         InputStream is = null;
@@ -146,7 +148,7 @@ public class FileUtils {
         //如果没SD卡则放缓存
         if (Environment.MEDIA_MOUNTED.equals(sdcardState)) {
             BASE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/danmukumaker/";
+                    + "/danmukumaker/";
         } else {
             BASE_PATH = App.getApp().getCacheDirPath();
         }
@@ -262,8 +264,8 @@ public class FileUtils {
         return of.exists() && !nf.exists() && of.renameTo(nf);
     }
 
-    /**  
-     * 复制单个文件  
+    /**
+     * 复制单个文件
      */
     public void copyFile(String oldPath, String newPath) {
         InputStream inStream = null;

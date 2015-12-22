@@ -16,20 +16,20 @@ import android.view.ViewConfiguration;
 
 public class ImageViewTouch extends ImageViewTouchBase {
 
-    static final float                        SCROLL_DELTA_THRESHOLD = 1.0f;
-    protected ScaleGestureDetector            mScaleDetector;
-    protected GestureDetector                 mGestureDetector;
-    protected int                             mTouchSlop;
-    protected float                           mScaleFactor;
-    protected int                             mDoubleTapDirection;
-    protected OnGestureListener               mGestureListener;
-    protected OnScaleGestureListener          mScaleListener;
-    protected boolean                         mDoubleTapEnabled      = true;
-    protected boolean                         mScaleEnabled          = true;
-    protected boolean                         mScrollEnabled         = true;
+    static final float SCROLL_DELTA_THRESHOLD = 1.0f;
+    protected ScaleGestureDetector mScaleDetector;
+    protected GestureDetector mGestureDetector;
+    protected int mTouchSlop;
+    protected float mScaleFactor;
+    protected int mDoubleTapDirection;
+    protected OnGestureListener mGestureListener;
+    protected OnScaleGestureListener mScaleListener;
+    protected boolean mDoubleTapEnabled = true;
+    protected boolean mScaleEnabled = true;
+    protected boolean mScrollEnabled = true;
     private OnImageViewTouchDoubleTapListener mDoubleTapListener;
     private OnImageViewTouchSingleTapListener mSingleTapListener;
-    private OnZoomAnimationListener           onZoomAnimationListener;
+    private OnZoomAnimationListener onZoomAnimationListener;
 
     public ImageViewTouch(Context context) {
         super(context);
@@ -117,7 +117,7 @@ public class ImageViewTouch extends ImageViewTouchBase {
 
         if (LOG_ENABLED) {
             Log.d(LOG_TAG, "onZoomAnimationCompleted. scale: " + scale + ", minZoom: "
-                           + getMinScale());
+                    + getMinScale());
         }
 
         if (scale < getMinScale()) {
@@ -185,11 +185,9 @@ public class ImageViewTouch extends ImageViewTouchBase {
 
     /**
      * Determines whether this ImageViewTouch can be scrolled.
-     * 
-     * @param direction
-     *            - positive direction value means scroll from right to left,
-     *            negative value means scroll from left to right
-     * 
+     *
+     * @param direction - positive direction value means scroll from right to left,
+     *                  negative value means scroll from left to right
      * @return true if there is some more place to scroll, false - otherwise.
      */
     public boolean canScroll(int direction) {
@@ -214,6 +212,7 @@ public class ImageViewTouch extends ImageViewTouchBase {
 
     /**
      * 设置缩放动画监听
+     *
      * @param onZoomAnimationListener
      */
     public void setOnZoomAnimationListener(OnZoomAnimationListener onZoomAnimationListener) {
@@ -312,7 +311,7 @@ public class ImageViewTouch extends ImageViewTouchBase {
                 if (mScaled && span != 0) {
                     mUserScaled = true;
                     targetScale = Math.min(getMaxScale(),
-                        Math.max(targetScale, getMinScale() - 0.1f));
+                            Math.max(targetScale, getMinScale() - 0.1f));
                     zoomTo(targetScale, detector.getFocusX(), detector.getFocusY());
                     mDoubleTapDirection = 1;
                     invalidate();
@@ -341,6 +340,7 @@ public class ImageViewTouch extends ImageViewTouchBase {
 
     /**
      * 缩放动画监听
+     *
      * @author linjinfa 331710168@qq.com
      * @date 2014年6月11日
      */

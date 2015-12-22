@@ -35,35 +35,40 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
 
         //标签的点击事件处理
         void onClick(LabelView label);
-    };
+
+        //长按标签事件处理
+        void onLongClick(LabelView label);
+    }
+
 
     //删除的时候会出错
-    private List<MyHighlightView>   mOverlayViews         = new CopyOnWriteArrayList<MyHighlightView>();
+    private List<MyHighlightView> mOverlayViews = new CopyOnWriteArrayList<MyHighlightView>();
 
-    private MyHighlightView         mOverlayView;
+    private MyHighlightView mOverlayView;
 
     private OnDrawableEventListener mDrawableListener;
 
-    private boolean                 mForceSingleSelection = true;
+    private boolean mForceSingleSelection = true;
 
-    private Paint                   mDropPaint;
+    private Paint mDropPaint;
 
-    private Rect                    mTempRect             = new Rect();
+    private Rect mTempRect = new Rect();
 
-    private boolean                 mScaleWithContent     = false;
+    private boolean mScaleWithContent = false;
 
-    private List<LabelView>         labels                = new ArrayList<LabelView>();
+    private List<LabelView> labels = new ArrayList<LabelView>();
     //当前被点击的标签
-    private LabelView               currentLabel;
+    private LabelView currentLabel;
     //标签被点击的处与基本坐标的距离
-    private float                   labelX, labelY, downLabelX, downLabelY;
+    private float labelX, labelY, downLabelX, downLabelY;
 
     /************************[BEGIN]贴纸处理**********************/
     /**
      * 用于感知label被点击了
+     *
      * @param label
-     * @param locationX
-     * @param locationY
+     * @param eventRawX
+     * @param eventRawY
      */
     //贴纸在上面进行操作
     public void setCurrentLabel(LabelView label, float eventRawX, float eventRawY) {
@@ -94,23 +99,29 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
     public boolean onTouchEvent(MotionEvent event) {
         if (currentLabel != null) {
             currentLabel.updateLocation((int) (event.getX() - labelX),
-                (int) (event.getY() - labelY));
+                    (int) (event.getY() - labelY));
             currentLabel.invalidate();
         }
         if (currentLabel != null) {
             switch (event.getAction()) {
-                case MotionEvent.ACTION_UP:// 手指离开时 
+                case MotionEvent.ACTION_UP:// 手指离开时
                 case MotionEvent.ACTION_CANCEL:
 
                     float upX = event.getRawX();
                     float upY = event.getRawY();
-                    double distance = Math.sqrt(Math.abs(upX - downLabelX)
-                                                * Math.abs(upX - downLabelX)
-                                                + Math.abs(upY - downLabelY)
-                                                * Math.abs(upY - downLabelY));//两点之间的距离
-                    if (distance < 15) { // 距离较小，当作click事件来处理
-                        if(mDrawableListener!=null){
-                            mDrawableListener.onClick(currentLabel);
+
+
+                    if (isLongPressed(downLabelX, downLabelY, upX, upY, event.getDownTime(), event.getEventTime(), 500)) {
+                        mDrawableListener.onLongClick(currentLabel);
+                    } else {
+                        double distance = Math.sqrt(Math.abs(upX - downLabelX)
+                                * Math.abs(upX - downLabelX)
+                                + Math.abs(upY - downLabelY)
+                                * Math.abs(upY - downLabelY));//两点之间的距离
+                        if (distance < 15) { // 距离较小，当作click事件来处理
+                            if (mDrawableListener != null) {
+                                mDrawableListener.onClick(currentLabel);
+                            }
                         }
                     }
                     currentLabel = null;
@@ -123,7 +134,9 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
         return super.onTouchEvent(event);
     }
 
-    /************************[END]贴纸处理**********************/
+    /************************
+     * [END]贴纸处理
+     **********************/
 
     public MyImageViewDrawableOverlay(Context context) {
         super(context);
@@ -159,9 +172,8 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
     /**
      * How overlay content will be scaled/moved
      * when zomming/panning the base image
-     * 
-     * @param value
-     *            true if content will scale according to the image
+     *
+     * @param value true if content will scale according to the image
      */
     public void setScaleWithContent(boolean value) {
         mScaleWithContent = value;
@@ -174,9 +186,8 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
     /**
      * If true, when the user tap outside the drawable overlay and
      * there is only one active overlay selection is not changed.
-     * 
-     * @param value
-     *            the new force single selection
+     *
+     * @param value the new force single selection
      */
     public void setForceSingleSelection(boolean value) {
         mForceSingleSelection = value;
@@ -250,7 +261,7 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
                     final float currentScale = mvalues[Matrix.MSCALE_X];
 
                     cropRect.offset((rect1.left - rect2.left) / currentScale,
-                        (rect1.top - rect2.top) / currentScale);
+                            (rect1.top - rect2.top) / currentScale);
                     cropRect.right += -(rect2.width() - rect1.width()) / currentScale;
                     cropRect.bottom += -(rect2.height() - rect1.height()) / currentScale;
 
@@ -327,7 +338,7 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
 
         if (realNewSelection != null && mScaleWithContent) {
             RectF displayRect = realNewSelection.getDisplayRect(realNewSelection.getMatrix(),
-                realNewSelection.getCropRectF());
+                    realNewSelection.getCropRectF());
             boolean invalidSize = realNewSelection.getContent().validateSize(displayRect);
 
             Log.d(LOG_TAG, "invalidSize: " + invalidSize);
@@ -358,7 +369,7 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
                 Log.d(LOG_TAG, "zooming to: " + (getScale() * diff));
 
                 zoomTo(getScale() * diff, displayRect.centerX(), displayRect.centerY(),
-                    DEFAULT_ANIMATION_DURATION * 1.5f);
+                        DEFAULT_ANIMATION_DURATION * 1.5f);
                 return true;
             }
         }
@@ -368,7 +379,7 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
             int edge = mOverlayView.getHit(e.getX(), e.getY());
             if (edge != MyHighlightView.NONE) {
                 mOverlayView.setMode((edge == MyHighlightView.MOVE) ? MyHighlightView.MOVE
-                    : (edge == MyHighlightView.ROTATE ? MyHighlightView.ROTATE
+                        : (edge == MyHighlightView.ROTATE ? MyHighlightView.ROTATE
                         : MyHighlightView.GROW));
                 postInvalidate();
                 if (mDrawableListener != null) {
@@ -427,7 +438,7 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
     }
 
     boolean mScrollStarted;
-    float   mLastMotionScrollX, mLastMotionScrollY;
+    float mLastMotionScrollX, mLastMotionScrollY;
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
@@ -629,6 +640,27 @@ public class MyImageViewDrawableOverlay extends ImageViewTouch {
         if (mDrawableListener != null) {
             mDrawableListener.onFocusChange(newView, oldView);
         }
+    }
+
+    /**
+     * * 判断是否有长按动作发生 * @param lastX 按下时X坐标 * @param lastY 按下时Y坐标 *
+     *
+     * @param thisX         移动时X坐标 *
+     * @param thisY         移动时Y坐标 *
+     * @param lastDownTime  按下时间 *
+     * @param thisEventTime 移动时间 *
+     * @param longPressTime 判断长按时间的阀值
+     */
+    static boolean isLongPressed(float lastX, float lastY, float thisX,
+                                 float thisY, long lastDownTime, long thisEventTime,
+                                 long longPressTime) {
+        float offsetX = Math.abs(thisX - lastX);
+        float offsetY = Math.abs(thisY - lastY);
+        long intervalTime = thisEventTime - lastDownTime;
+        if (offsetX <= 10 && offsetY <= 10 && intervalTime >= longPressTime) {
+            return true;
+        }
+        return false;
     }
 
 }
