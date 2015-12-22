@@ -91,7 +91,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
         if (bundle != null) {
             feedItem = (FeedItem) bundle.getSerializable("lables");
             for (TagItem tagItem : feedItem.getTagList()) {
-                addOldLable(tagItem);
+                addLable(tagItem);
             }
         }
     }
@@ -130,8 +130,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         mImageView.setOnDrawableEventListener(wpEditListener);
         mImageView.setSingleTapListener(() -> {
-            EditTextActivity.openTextEdit(PhotoProcessActivity.this, "", 8, AppConstants.ACTION_EDIT_LABEL);
-
+            EditTextActivity.openTextEdit(PhotoProcessActivity.this, new TagItem(mImageView.getmLastMotionScrollX(), mImageView.getmLastMotionScrollY()), AppConstants.ACTION_EDIT_LABEL);
             drawArea.postInvalidate();
         });
 
@@ -206,8 +205,8 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
     public void tagClick(View v) {
         TextView textView = (TextView) v;
-        TagItem tagItem = new TagItem(AppConstants.POST_TYPE_TAG, textView.getText().toString());
-        addLabel(tagItem);
+        TagItem tagItem = new TagItem(mImageView.getmLastMotionScrollX(), mImageView.getmLastMotionScrollY(), textView.getText().toString());
+        addLable(tagItem);
     }
 
     private MyImageViewDrawableOverlay.OnDrawableEventListener wpEditListener = new MyImageViewDrawableOverlay.OnDrawableEventListener() {
@@ -230,7 +229,9 @@ public class PhotoProcessActivity extends CameraBaseActivity {
 
         @Override
         public void onClick(final LabelView label) {
-            toast("点击", Toast.LENGTH_LONG);
+            EffectUtil.removeLabelEditable(mImageView, drawArea, label);
+            labels.remove(label);
+            EditTextActivity.openTextEdit(PhotoProcessActivity.this, label.getTagInfo(), AppConstants.ACTION_EDIT_LABEL);
         }
 
         @Override
@@ -246,21 +247,7 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     };
 
 
-    //添加标签
-    private void addLabel(TagItem tagItem) {
-        int left = 0;
-        int top = 0;
-        if (labels.size() == 0 && left == 0 && top == 0) {
-            left = mImageView.getWidth() / 2 - 10;
-            top = mImageView.getWidth() / 2;
-        }
-        LabelView label = new LabelView(PhotoProcessActivity.this);
-        label.init(tagItem);
-        EffectUtil.addLabelEditable(mImageView, drawArea, label, left, top);
-        labels.add(label);
-    }
-
-    private void addOldLable(TagItem tagItem) {
+    private void addLable(TagItem tagItem) {
         int left = (int) tagItem.getX();
         int top = (int) tagItem.getY();
         LabelView label = new LabelView(PhotoProcessActivity.this);
@@ -273,16 +260,9 @@ public class PhotoProcessActivity extends CameraBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (AppConstants.ACTION_EDIT_LABEL == requestCode && data != null) {
-            String text = data.getStringExtra(AppConstants.PARAM_EDIT_TEXT);
-            if (StringUtils.isNotEmpty(text)) {
-                TagItem tagItem = new TagItem(AppConstants.POST_TYPE_TAG, text);
-                addLabel(tagItem);
-            }
-        } else if (AppConstants.ACTION_EDIT_LABEL_POI == requestCode && data != null) {
-            String text = data.getStringExtra(AppConstants.PARAM_EDIT_TEXT);
-            if (StringUtils.isNotEmpty(text)) {
-                TagItem tagItem = new TagItem(AppConstants.POST_TYPE_POI, text);
-                addLabel(tagItem);
+            TagItem tagItem = (TagItem) data.getExtras().getSerializable(AppConstants.EDIT_TAG);
+            if (StringUtils.isNotEmpty(tagItem.getName())) {
+                addLable(tagItem);
             }
         }
     }

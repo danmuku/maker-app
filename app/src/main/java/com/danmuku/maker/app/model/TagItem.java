@@ -5,46 +5,26 @@ import java.io.Serializable;
 
 public class TagItem implements Serializable {
     private static final long serialVersionUID = 2685507991821634905L;
-    private long id;
-    private int type;
     private String name;
     private double x = -1;
     private double y = -1;
 
-    private int recordCount;
-
-
-    public int getRecordCount() {
-        return recordCount;
-    }
-
-    public void setRecordCount(int recordCount) {
-        this.recordCount = recordCount;
-    }
 
     public TagItem() {
-
+        this.x = 10;
+        this.y = 10;
     }
 
-    public TagItem(int type, String label) {
-        this.type = type;
+    public TagItem(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public TagItem(double x, double y, String label) {
+        this.x = x;
+        this.y = y;
         this.name = label;
-    }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public String getName() {

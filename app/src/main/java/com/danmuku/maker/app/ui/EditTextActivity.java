@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.danmuku.maker.R;
+import com.danmuku.maker.app.model.TagItem;
+import com.danmuku.maker.customview.LabelView;
 import com.danmuku.maker.util.StringUtils;
 import com.danmuku.maker.AppConstants;
 import com.danmuku.maker.base.BaseActivity;
@@ -32,12 +34,14 @@ public class EditTextActivity extends BaseActivity {
     @InjectView(R.id.tag_input_tips)
     TextView numberTips;
 
-    public static void openTextEdit(Activity mContext, String defaultStr, int maxLength, int reqCode) {
+    private static TagItem tagItem;
+
+    public static void openTextEdit(Activity mContext, TagItem tagInfo, int reqCode) {
         Intent i = new Intent(mContext, EditTextActivity.class);
-        i.putExtra(AppConstants.PARAM_EDIT_TEXT, defaultStr);
-        if (maxLength != 0) {
-            i.putExtra(AppConstants.PARAM_MAX_SIZE, maxLength);
-        }
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable(AppConstants.EDIT_TAG, tagInfo);
+        i.putExtras(mBundle);
+        tagItem = tagInfo;
         mContext.startActivityForResult(i, reqCode);
     }
 
@@ -46,9 +50,8 @@ public class EditTextActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_text);
         ButterKnife.inject(this);
-        maxlength = getIntent().getIntExtra(AppConstants.PARAM_MAX_SIZE, MAX);
 
-        String defaultStr = getIntent().getStringExtra(AppConstants.PARAM_EDIT_TEXT);
+        String defaultStr = tagItem.getName();
         if (StringUtils.isNotEmpty(defaultStr)) {
             contentView.setText(defaultStr);
             if (defaultStr.length() <= maxlength) {
@@ -60,8 +63,10 @@ public class EditTextActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                String inputTxt = contentView.getText().toString();
-                intent.putExtra(AppConstants.PARAM_EDIT_TEXT, inputTxt);
+                Bundle mBundle = new Bundle();
+                tagItem.setName(contentView.getText().toString());
+                mBundle.putSerializable(AppConstants.EDIT_TAG, tagItem);
+                intent.putExtras(mBundle);
                 setResult(RESULT_OK, intent);
                 finish();
             }

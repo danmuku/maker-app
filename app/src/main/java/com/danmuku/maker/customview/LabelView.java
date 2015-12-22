@@ -1,6 +1,8 @@
 package com.danmuku.maker.customview;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +48,6 @@ public class LabelView extends LinearLayout {
 
     public void init(TagItem tagItem) {
         tagInfo.setName(tagItem.getName());
-        tagInfo.setId(tagItem.getId());
-        tagInfo.setType(tagItem.getType());
         labelTxt.setText(tagItem.getName());
     }
 
@@ -177,4 +177,6 @@ public class LabelView extends LinearLayout {
         setupLocation(x, y);
         wave();
     }
+
+
 }
